@@ -14,14 +14,14 @@ pipeline {
         }
 
         stage('Prepare') {
-                    steps {
-                        // gradlew 에 실행 권한 부여
-                        sh 'chmod +x gradlew'
-                    }
+            steps {
+                // gradlew 에 실행 권한 부여
+                sh 'chmod +x gradlew'
+            }
+        } // ← 이 중괄호가 빠져 있었습니다.
 
         stage('Build & Test') {
             steps {
-                // gradlew는 리눅스용 쉘 스크립트 gradlew가 같이 체크아웃된다는 가정
                 sh './gradlew clean build'
             }
             post {
