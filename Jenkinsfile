@@ -15,12 +15,11 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                // Windows 에이전트에서 Gradle 빌드
-                bat 'gradlew.bat clean build'
+                // gradlew는 리눅스용 쉘 스크립트 gradlew가 같이 체크아웃된다는 가정
+                sh './gradlew clean build'
             }
             post {
                 always {
-                    // JUnit 리포트 수집
                     junit '**/build/test-results/test/*.xml'
                 }
             }
@@ -29,20 +28,18 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // 로컬 Docker에 이미지 빌드
-                    docker.build("%IMAGE_NAME%:%BUILD_NUMBER%")
+                    docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
                 }
             }
         }
 
         stage('Deploy to Local Docker') {
             steps {
-                // 기존 컨테이너 중지·삭제 후 새로 실행
-                bat """
-                    docker stop myapp || echo Stopping skipped
-                    docker rm myapp   || echo Removal skipped
-                    docker run -d --name myapp -p 8080:8080 %IMAGE_NAME%:%BUILD_NUMBER%
-                """
+                sh '''
+                    docker stop myapp || echo "Stopping skipped"
+                    docker rm myapp   || echo "Removal skipped"
+                    docker run -d --name myapp -p 8080:8080 ${IMAGE_NAME}:${BUILD_NUMBER}
+                '''
             }
         }
     }
