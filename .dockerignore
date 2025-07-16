@@ -1,0 +1,5 @@
+# 프로젝트 루트/.dockerignore
+.gradle
+.gradle-wrapper.jar
+gradlew
+gradlew.bat
