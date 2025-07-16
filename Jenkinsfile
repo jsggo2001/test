@@ -13,6 +13,12 @@ pipeline {
             }
         }
 
+        stage('Prepare') {
+                    steps {
+                        // gradlew 에 실행 권한 부여
+                        sh 'chmod +x gradlew'
+                    }
+
         stage('Build & Test') {
             steps {
                 // gradlew는 리눅스용 쉘 스크립트 gradlew가 같이 체크아웃된다는 가정
